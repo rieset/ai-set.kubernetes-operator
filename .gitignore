@@ -1,0 +1,56 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+testbin/
+
+# Test binary
+*.test
+
+# Coverage
+*.out
+cover.out
+cover.html
+
+# Dependencies
+vendor/
+
+# Go workspace
+go.work
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist/
+build/
+
+# Generated files
+operator/api/v1alpha1/zz_generated.deepcopy.go
+
+# Logs
+*.log
+*.log.*
+
+# Temporary files
+*.tmp
+*.temp
+/tmp/
+
+# Sensitive config
+config.local.yaml
+*.local.yaml
+
+# Development notes (AI context, implementation pipeline, troubleshooting)
+.dev/

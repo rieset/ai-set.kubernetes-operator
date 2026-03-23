@@ -1,5 +1,16 @@
 # Cursor Rules for Kubernetes Operator
 
+## ⚠️ CRITICAL REQUIREMENT
+
+**DO NOT CREATE FILES WITHOUT EXPLICIT USER REQUEST**
+
+- ❌ **PROHIBITED** to create files without explicit user instruction
+- ✅ **ALLOWED** to create files only when user explicitly asks
+- ✅ **ALLOWED** to edit existing files on request
+- ✅ **ALLOWED** to suggest file creation, but not create without confirmation
+
+**This requirement has the highest priority and must always be followed.**
+
 ## Project Overview
 This is a Kubernetes operator built with Operator SDK for managing and automating Kubernetes resources.
 
@@ -55,6 +66,25 @@ This is a Kubernetes operator built with Operator SDK for managing and automatin
 - Document all exported functions and types
 - Index functions in code files for easy navigation
 - Split large files into smaller, focused modules when approaching the limit
+
+### File Naming Requirements
+
+- **ONLY the following files may use uppercase letters in their names:**
+  - `README.md` — the only markdown with uppercase
+  - `Makefile` — Go project standard
+  - `Dockerfile` — Docker standard
+  - `LICENSE` — open source standard
+  - `Chart.yaml` — Helm standard
+  - `CODEOWNERS` — GitHub standard
+  - `TEMPLATE.md` — template project description
+  - `context.md` — project context (exception: already established convention)
+  - Go generated files: `zz_generated.*.go`
+
+- **All other files must use lowercase letters:**
+  - Documentation `docs/`: kebab-case (`overview.md`, `best-practices.md`, `function-rating.md`)
+  - Go files: snake_case (`security_policy.go`, `status_updater.go`)
+  - Config files: kebab-case (`.golangci.yml`, `config.yaml`)
+  - **Prohibited:** `SETUP.md`, `DEVELOPMENT.md`, `CONTEXT_FILE.md`
 
 ### Documentation Requirements
 - **MANDATORY: All documentation and commit messages MUST be written in English**
@@ -247,34 +277,85 @@ When refactoring, prioritize functions in this order:
 ## File Structure
 ```
 /
-├── .cursorrules          # This file
+├── .cursorrules          # This file - development rules
+├── .gitignore            # .dev/ is gitignored; .skills/ is versioned
+├── .golangci.yml         # Linter configuration (version: "2")
 ├── README.md             # Project overview
 ├── TEMPLATE.md           # Template project information
-├── docs/                 # Documentation
+├── context.md            # Project context (MANDATORY: read before work, update after changes)
+├── docs/                 # Documentation (lowercase kebab-case filenames)
 │   ├── glossary.md       # Terms and definitions
-│   └── ...               # Documentation for functions, algorithms, and logic
+│   ├── best-practices.md # Go best practices
+│   ├── function-rating.md # Function rating system
+│   ├── linting.md        # Linting guide
+│   ├── logging.md        # Logging guide
+│   ├── modules.md        # Module structure
+│   └── operator-sdk-go-guide.md # Operator SDK guide
 ├── operator/             # Operator directory (initialized with operator-sdk)
 │   ├── api/              # API definitions
 │   ├── controllers/      # Controller implementations
 │   └── ...               # Other operator files
-└── ...                   # Other project files
+├── .dev/                 # In .gitignore — development notes, TZ, implementation pipeline
+│   └── README.md         # Folder description
+└── .skills/              # AI skills for development (versioned)
+    └── find-skills/
+        └── SKILL.md      # Find skills skill
 ```
 
+## Project Context Management
+
+### CRITICAL: Project Context File (context.md)
+
+- **MANDATORY: Before starting any work on this project, ALWAYS read `context.md` to understand the current project state**
+- **MANDATORY: After making significant changes to the project, you MUST update `context.md` to reflect the new state**
+- **MANDATORY: When adding new features, dependencies, or changing project structure, update `context.md` accordingly**
+
+#### When to Update context.md
+
+Update `context.md` when:
+- Adding new API resources (CRDs)
+- Implementing new controllers
+- Adding new dependencies
+- Changing project structure
+- Updating configuration
+- Adding new documentation
+- Changing development workflow
+- Updating technical specifications
+
+#### How to Update context.md
+
+1. Read the current `context.md` file
+2. Identify sections that need updating
+3. Update relevant sections with new information
+4. Update the "Last Updated" date at the bottom
+5. Ensure all information is accurate and complete
+
+#### Sections to Keep Updated
+
+- Current State (Implemented/Not Implemented)
+- Project Structure (if structure changes)
+- Dependencies (when adding/removing dependencies)
+- Configuration (when changing config)
+- Next Steps (as project progresses)
+
 ## Development Workflow
-1. Always check glossary before introducing new terms
-2. Update documentation when adding features
-3. Index functions in code files
-4. **CRITICAL: Monitor file size - files exceeding 500 lines MUST be refactored immediately**
-5. **MANDATORY: Files exceeding 300 lines MUST be modularized - extract functions into separate modules**
-6. Follow semantic versioning
-7. Write tests before implementing features (TDD preferred)
-8. **CRITICAL: Run `make lint` before and after making code changes to ensure code quality**
-9. **MANDATORY: After code generation (`make generate`, `make manifests`, `operator-sdk generate`), ALWAYS run `make lint`**
-10. Fix all linting errors before committing code
-11. **MANDATORY: Write all commit messages in English**
-12. **MANDATORY: Every function MUST have a FunctionRating comment - see Function Rating System section**
-13. **CRITICAL: Functions with rating < 45 MUST be refactored before merging**
-14. **MANDATORY: Functions with critical issues (HARDCODE, DEEP_NESTING) MUST be fixed immediately**
+
+1. **ALWAYS read `context.md` before starting work**
+2. Always check glossary before introducing new terms
+3. Update documentation when adding features
+4. **Update `context.md` after significant changes**
+5. Index functions in code files
+6. **CRITICAL: Monitor file size - files exceeding 500 lines MUST be refactored immediately**
+7. **MANDATORY: Files exceeding 300 lines MUST be modularized - extract functions into separate modules**
+8. Follow semantic versioning
+9. Write tests before implementing features (TDD preferred)
+10. **CRITICAL: Run `make lint` before and after making code changes to ensure code quality**
+11. **MANDATORY: After code generation (`make generate`, `make manifests`, `operator-sdk generate`), ALWAYS run `make lint`**
+12. Fix all linting errors before committing code
+13. **MANDATORY: Write all commit messages in English**
+14. **MANDATORY: Every function MUST have a FunctionRating comment - see Function Rating System section**
+15. **CRITICAL: Functions with rating < 45 MUST be refactored before merging**
+16. **MANDATORY: Functions with critical issues (HARDCODE, DEEP_NESTING) MUST be fixed immediately**
 
 ## Kubernetes Specific
 - Use client-go for Kubernetes API interactions
